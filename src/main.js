@@ -165,7 +165,7 @@ $form.onsubmit = function(){
 
 $container.onclick = function(event) {
     const $element = event.target;
-    if ($element.classList.contains('close')) {
+    if ($element.classList.contains('close') || $element.parentNode.classList.contains('close')) { //the second condition is because the click is detected in the span element which doesn't have the 'close' class
         close($element);
     }
     if ($element.classList.contains('toggleStatus')) {
