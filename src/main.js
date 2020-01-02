@@ -4,10 +4,8 @@ const $pagesInput = document.querySelector("#pages-input");
 const $status = document.querySelectorAll('.form-check-input');
 const $form = document.querySelector("#form");
 const $container = document.querySelector('.container');
-let myLibrary = [{title: "I, Robot", author: "Isaac Asimov", pages: 224, status: "read"}, {title: "Cosmos", author: "Carl sagan", pages: 384, status: "read"}];
+let myLibrary = [];
 
-//incorporar validacion custom https://getbootstrap.com/docs/4.4/components/forms/?#custom-styles
-//para arreglar del bug de que siempre pone "read" en status primero hay que sacar el valor con un loop, y en la comprobación tiene que estar tildada aunque sea una casilla
 
 function Book(title, author, pages, status) {
     this.Title = title;
@@ -15,6 +13,10 @@ function Book(title, author, pages, status) {
     this.Pages = pages;
     this.Status = status;
 }
+
+
+myLibrary.push(new Book("I, Robot","Isaac Asimov", 224, "read"));
+myLibrary.push(new Book("Cosmos", "Carl sagan", 384, "read"));
 
 
 function addBookToLibrary() {
@@ -58,7 +60,6 @@ function render() {
 
         $container.appendChild(div);
     }
-    
 }
 
 
@@ -88,7 +89,6 @@ function validateAuthor(author) {
     else {
         return '';
     }
-    
 }
 
 
@@ -103,13 +103,11 @@ function validatePageNumber(pages) {
 
 
 function validateStatus($status) {
-    let checked;
     for (let i = 0; i < $status.length; i++) {
         if($status[i].checked){
-            checked = $status[i];
+            return $status[i].value;
         }
     }
-    
 }
 
 
@@ -133,7 +131,7 @@ function handleErrors(errors) {
        if (error) {
            ammountOfErrors++;
        }
-    })
+    });
 
     if (ammountOfErrors === 0) {
        return true;
@@ -148,13 +146,12 @@ function close(book) {
 }
 
 
-function toggleReadStatus(book){
-    let bookId = Number(book.parentNode.dataset.bookId);
-    if (myLibrary[bookId].status === "read"){
-        myLibrary[bookId].status = "unread";
+Book.prototype.toggleStatus = function (){
+    if (this.Status === "read"){
+        this.Status = "unread";
     }
     else{
-        myLibrary[bookId].status = "read";
+       this.Status = "read";
     }
     render();
 }
@@ -172,7 +169,8 @@ $container.onclick = function(event) {
         close($element);
     }
     if ($element.classList.contains('toggleStatus')) {
-        toggleReadStatus($element);
+        let bookId = Number($element.parentNode.dataset.bookId);
+        myLibrary[bookId].toggleStatus();
     }
 }
 
