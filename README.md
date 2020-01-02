@@ -8,3 +8,6 @@ My solution for the [library project on TOP](https://www.theodinproject.com/cour
 * Simple layout with Bootstrap
 * JS object and prototype
 * Local storage
+
+## To do:
+* Custom Boostrap validation messages
