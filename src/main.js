@@ -22,14 +22,27 @@ myLibrary.push(new Book("Cosmos", "Carl sagan", 384, "read"));
 function addBookToLibrary() {
     if (validateForm($titleInput.value, $authorInput.value, $pagesInput.value)){
         myLibrary.push(new Book($titleInput.value, $authorInput.value, $pagesInput.value, validateStatus($status)));
+        populateStorage(myLibrary);
         $form.reset(); 
         render();
     }
 }
 
+function populateStorage(array) {
+    localStorage.setItem('myLibrary', JSON.stringify(array));
+}
+
+
+function retrieveData() {
+    let retrievedData = localStorage.getItem('myLibrary');
+    myLibrary = JSON.parse(retrievedData);
+    myLibrary.forEach(book => Object.setPrototypeOf(book, Book.prototype));
+}
+
 
 function render() {
     // loops through the array and displays each book on the page.
+    retrieveData();
     $container.innerHTML = '';
     
     for (let i = 0; i < myLibrary.length; i++) {
@@ -142,6 +155,7 @@ function handleErrors(errors) {
 function close(book) {
     let removeIndex = Number(book.parentNode.dataset.bookId);
     myLibrary.splice(removeIndex, 1);
+    populateStorage(myLibrary);
     render();
 }
 
@@ -153,6 +167,7 @@ Book.prototype.toggleStatus = function (){
     else{
        this.Status = "read";
     }
+    populateStorage(myLibrary);
     render();
 }
 
